@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='utf-8'?>
+<?xml-stylesheet type='text/xsl' href='http://www2.osgi.org/www/obr2html.xsl'?>
+
+<repository lastmodified='20140707055453.279' name='Untitled'>
+  <resource id='org.apache.ace.agent.launcher.felix/1.0.0' presentationname='Apache ACE Agent Felix launcher' symbolicname='org.apache.ace.agent.launcher.felix' uri='ace-launcher.jar' version='1.0.0'>
+    <description>
+      Standalone launcher that start a Felix framework with an embedded
+       ACE Agent
+    </description>
+    <size>
+      775067
+    </size>
+    <license>
+      http://www.apache.org/licenses/LICENSE-2.0.txt
+    </license>
+    <documentation>
+      http://ace.apache.org/
+    </documentation>
+    <capability name='bundle'>
+      <p n='manifestversion' v='2'/>
+      <p n='presentationname' v='Apache ACE Agent Felix launcher'/>
+      <p n='symbolicname' v='org.apache.ace.agent.launcher.felix'/>
+      <p n='version' t='version' v='1.0.0'/>
+    </capability>
+    <require extend='false' filter='(&amp;(package=javax.security.auth.x500)(version&gt;=0.0.0))' multiple='false' name='package' optional='false'>
+      Import package javax.security.auth.x500
+    </require>
+  </resource>
+  <resource id='org.apache.felix.deployment.rp.autoconf/0.1.5' presentationname='Apache Felix AutoConf Resource Processor' symbolicname='org.apache.felix.deployment.rp.autoconf' uri='org.apache.felix.deployment.rp.autoconf-0.1.5.jar' version='0.1.5'>
+    <description>
+      A customizer bundle that publishes a Resource Processor service
+       that processes configuration resources shipped in a Deployment
+       Package.
+    </description>
+    <size>
+      101161
+    </size>
+    <license>
+      http://www.apache.org/licenses/LICENSE-2.0.txt
+    </license>
+    <documentation>
+      http://www.apache.org/
+    </documentation>
+    <capability name='bundle'>
+      <p n='manifestversion' v='2'/>
+      <p n='presentationname' v='Apache Felix AutoConf Resource Processor'/>
+      <p n='symbolicname' v='org.apache.felix.deployment.rp.autoconf'/>
+      <p n='version' t='version' v='0.1.5'/>
+    </capability>
+    <capability name='package'>
+      <p n='package' v='org.osgi.service.deploymentadmin.spi'/>
+      <p n='uses:' v='org.osgi.framework,org.osgi.service.deploymentadmin'/>
+      <p n='version' t='version' v='1.0.0'/>
+    </capability>
+    <capability name='package'>
+      <p n='package' v='org.osgi.service.metatype'/>
+      <p n='uses:' v='org.osgi.framework'/>
+      <p n='version' t='version' v='1.2.0'/>
+    </capability>
+    <require extend='false' filter='(&amp;(package=org.apache.felix.dm)(version&gt;=3.0.0)(version&lt;4.0.0))' multiple='false' name='package' optional='false'>
+      Import package org.apache.felix.dm ;version=[3.0.0,4.0.0)
+    </require>
+    <require extend='false' filter='(&amp;(package=org.osgi.framework)(version&gt;=1.5.0)(version&lt;2.0.0))' multiple='false' name='package' optional='false'>
+      Import package org.osgi.framework ;version=[1.5.0,2.0.0)
+    </require>
+    <require extend='false' filter='(&amp;(package=org.osgi.service.cm)(version&gt;=1.3.0)(version&lt;2.0.0))' multiple='false' name='package' optional='false'>
+      Import package org.osgi.service.cm ;version=[1.3.0,2.0.0)
+    </require>
+    <require extend='false' filter='(&amp;(package=org.osgi.service.deploymentadmin)(version&gt;=1.0.0)(version&lt;2.0.0))' multiple='false' name='package' optional='false'>
+      Import package org.osgi.service.deploymentadmin ;version=[1.0.0,2.0.0)
+    </require>
+    <require extend='false' filter='(&amp;(package=org.osgi.service.deploymentadmin.spi)(version&gt;=1.0.0)(version&lt;2.0.0))' multiple='false' name='package' optional='false'>
+      Import package org.osgi.service.deploymentadmin.spi ;version=[1.0.0,2.0.0)
+    </require>
+    <require extend='false' filter='(&amp;(package=org.osgi.service.event)(version&gt;=1.2.0)(version&lt;2.0.0))' multiple='false' name='package' optional='false'>
+      Import package org.osgi.service.event ;version=[1.2.0,2.0.0)
+    </require>
+    <require extend='false' filter='(&amp;(package=org.osgi.service.log)(version&gt;=1.3.0)(version&lt;2.0.0))' multiple='false' name='package' optional='false'>
+      Import package org.osgi.service.log ;version=[1.3.0,2.0.0)
+    </require>
+    <require extend='false' filter='(&amp;(package=org.osgi.service.metatype)(version&gt;=1.2.0)(version&lt;2.0.0))' multiple='false' name='package' optional='false'>
+      Import package org.osgi.service.metatype ;version=[1.2.0,2.0.0)
+    </require>
+    <require extend='false' filter='(&amp;(package=org.osgi.util.tracker)(version&gt;=1.4.0)(version&lt;2.0.0))' multiple='false' name='package' optional='false'>
+      Import package org.osgi.util.tracker ;version=[1.4.0,2.0.0)
+    </require>
+  </resource>
+</repository>
