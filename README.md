@@ -1,16 +1,18 @@
 Node Provisioning Service
 =========================
 
-Run an INAETICS Node Provisioning as a CoreOS/Docker service.
 
-Run on localmachine
+Run [Apache ACE Server] (https://ace.apache.org/) as a CoreOS/Docker service. 
+
+
+Run on localhost
 -------------------
 
 * Install Docker
 * Clone this repository
 * Run `./node-provisioning-service build
 * Run `./node-provisioning-service run`
-* TODO no frontend yet
+* Check `http://localhost:8080`
 
 
 Run in Vagrant
@@ -19,5 +21,5 @@ Run in Vagrant
 * Clone this repository
 * Configure discovery in coreos-userdata (optional)
 * Run `vagrant up`
-* TODO no frontend yet
+* Check `http://172.17.8.201:8080/ace/`
 
