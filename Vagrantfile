@@ -33,12 +33,12 @@ Vagrant.configure("2") do |config|
       virtualbox.cpus = $virtualbox_cpus
     end
 
-    # Provision service with nfs
+    # Provision with nfs
     # config.vm.synced_folder ".", "/var/lib/node-provisioning-service", id: "node-provisioning-service", :nfs => true, :mount_options => ['nolock,vers=3,udp']
 
-    # Provision service with shell
-    config.vm.provision :file, :source => ".", :destination => "/tmp/node-provisioning-service"
-    config.vm.provision :shell, :inline => "rm -rf /var/lib/node-provisioning-service; mv /tmp/node-provisioning-service /var/lib/node-provisioning-service", :privileged => true
+    # Provision with shell
+    # config.vm.provision :file, :source => ".", :destination => "/tmp/node-provisioning-service"
+    # config.vm.provision :shell, :inline => "rm -rf /var/lib/node-provisioning-service; mv /tmp/node-provisioning-service /var/lib/node-provisioning-service", :privileged => true
 
     config.vm.provision :file, :source => "coreos-userdata", :destination => "/tmp/vagrantfile-user-data"
     config.vm.provision :shell, :inline => "mv /tmp/vagrantfile-user-data /var/lib/coreos-vagrant/", :privileged => true
