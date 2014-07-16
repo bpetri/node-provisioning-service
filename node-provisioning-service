@@ -50,7 +50,7 @@ start_up () {
   docker rm node-provisioning-service >/dev/null 2>/dev/null
   docker start node-provisioning-service >/dev/null 2>/dev/null
   if [ $? -gt 0 ]; then
-    docker run --name node-provisioning-service -d -p 8080:8080 inaetics/node-provisioning /bin/bash -c "cd /tmp && java -Dgosh.args=--nointeractive -jar server-allinone.jar"
+    docker run --name node-provisioning-service -d -p 8080:8080 inaetics/node-provisioning /tmp/node-provisioning.sh
   fi
 }
 

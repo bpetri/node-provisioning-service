@@ -1,0 +1,103 @@
+
+echo "Opening workspace"
+workspace = (ace:cw)
+
+echo "Indexing source bundles"
+sourceindex = (repo:index default-resources)
+
+echo "Opening source repo"
+sourcerepo = (repo:repo R5 $sourceindex)
+
+echo "Opening target repo"
+targetrepo = (repo:repo OBR "http://localhost:8080/obr/repository.xml")
+
+echo "Copying resources"
+each  ($sourcerepo find) {
+  identity = $it getIdentity
+  version = $it getVersion
+  if { (coll:first ($targetrepo find "(&(osgi.identity=$identity)(version=$version))")) } {
+    echo " -> resource exists: $identity/$version"
+  } {
+    devnull=(repo:cp $sourcerepo $targetrepo "(&(osgi.identity=$identity)(version=$version))")
+    echo " -> resource copied: $identity/$version"
+  }
+}
+
+echo "Handling autoconf"
+autoconf = (coll:first ($targetrepo find "(osgi.identity=org.apache.felix.deployment.rp.autoconf)"))
+if { $autoconf } { 
+  echo " -> autoconf resource exists"
+  if { (coll:first ($workspace lrp "(Bundle-SymbolicName=org.apache.felix.deployment.rp.autoconf)")) } { 
+    echo " -> autoconf artifact exists" 
+  } { 
+    identity = $autoconf getIdentity
+    version = $autoconf getVersion
+    name = "$identity - $version"
+    url = $autoconf getUrl
+    mimetype = $autoconf getMimetype
+    $workspace ca [ artifactName="$name" url="$url" mimetype="$mimetype" Bundle-SymbolicName="$identity" \
+           Bundle-Version="$version" Deployment-ProvidesResourceProcessor="org.osgi.deployment.rp.autoconf" ]
+    echo " -> autoconf resource created"
+  }
+} { 
+  echo " -> autoconf resource not found"
+}
+
+echo "Creating artifacts"
+each  ($targetrepo find "(!(osgi.identity=org.apache.felix.deployment.rp.autoconf))") {
+  identity = $it getIdentity
+  version = $it getVersion
+  name = "$identity - $version"
+  url = $it getUrl
+  mimetype = $it getMimetype
+  if { (coll:first ($workspace la "(&(Bundle-SymbolicName=$identity)(Bundle-Version=$version))")) } { 
+    echo " -> artifact exists: "$name
+  } {
+    if { $mimetype equals "application/xml:osgi-autoconf" } { 
+      $workspace ca [ artifactName="$name" url="$url" mimetype="$mimetype" \
+           filename="$name" processorPid="org.osgi.deployment.rp.autoconf" ] [ default="true" ]
+    } { 
+      $workspace ca [ artifactName="$name" url="$url" mimetype="$mimetype" \
+           Bundle-SymbolicName="$identity" Bundle-Version="$version" ] [ default="true"]
+    }
+  }
+}
+
+echo "Ensuring default mappings"
+if { (coll:first ($workspace lf "(name=default)")) } { 
+  echo " -> feature exists" 
+} { 
+  $workspace cf "default"
+  echo " -> feature created" 
+}
+if { (coll:first ($workspace la2f "(rightEndpoint=*name=default*)")) } { 
+  echo " -> artifact mapping exists" 
+} { 
+  $workspace ca2f "(default=true)" "(name=default)" "10000" "1"
+  echo " -> artifact mapping created" 
+}
+if { (coll:first ($workspace ld "(name=default)")) } { 
+  echo " -> distribution exists" 
+} { 
+  $workspace cd "default"
+  echo " -> distribution created" 
+}
+if { (coll:first ($workspace lf2d "(leftEndpoint=*name=default*)")) } { 
+  echo " -> feature mapping exists" 
+} { 
+  $workspace cf2d "(name=default)" "(name=default)" "1" "1"
+  echo " -> feature mapping created" 
+}
+if { (coll:first ($workspace ld2t "(leftEndpoint=*name=default*)")) } { 
+  echo " -> target mapping exists" 
+} { 
+  $workspace cd2t "(name=default)" "(id=*)" "1" "1000"
+  echo " -> target mapping created" 
+}
+
+echo "Comitting workspace"
+$workspace commit
+
+# Let events settle
+misc:sleep 1000
+ace:rw $workspace
