@@ -1,88 +1,60 @@
 #!/bin/bash
 
-# Control node-provisioning-service build|run|stop|start with docker
-#
-# This is just a very simple helper. Use docker directly
-# for full options (see http://www.docker.com/)
+# Starts a node-provisioning-service with docker
 
-COMMAND=$1
-
-PWD=`pwd`
+ORGDIR=`pwd`
 cd $(dirname $0)
-cd $PWD
 
-BUILDDIR="/tmp/builds"
-if [ ! -d "$BUILDDIR" ]; then mkdir $BUILDDIR; fi
+source tools/build.sh
+source tools/etcdctl.sh
+source tools/docker.sh
 
-
-_locate_aptcacher () {
-  # TODO locate in Etcd
-  echo "172.17.8.200:3142"
-}
-
-_locate_jdkarchive () {
- echo `tools/java-installer/java-download`
-}
-
-build_image () {
-
-  local builddir="/tmp/build-$RANDOM"
-  mkdir $builddir
-  rsync -av --delete --exclude=".git" --exclude=".vagrant"  . $builddir
-
-
-  local aptcacher=`_locate_aptcacher`
-  if [ ! "$aptcacher" == "" ]; then
-    sed -i "/##APT_PROXY/ a\RUN echo \"Acquire::http::Proxy \\\\\"http://$aptcacher\\\\\";\" > /etc/apt/apt.conf.d/01proxy" $builddir/Dockerfile
-  fi;
-
-  local jdkarchive=`_locate_jdkarchive`
-  if [ ! "$jdkarchive" == "" ]; then
-    cp -v $jdkarchive $builddir/tools/java-installer
-    sed -i "/##JDK_INSTALL/ a\ADD tools/java-installer /tmp/java-installer/\nRUN /tmp/java-installer/java-install; rm -Rf /tmp/java-installer" $builddir/Dockerfile
-  fi
-
-  docker build -t inaetics/node-provisioning $builddir
-  rm -rf $builddir
-}
-
-start_up () {
-  docker rm node-provisioning-service >/dev/null 2>/dev/null
-  docker start node-provisioning-service >/dev/null 2>/dev/null
-  if [ $? -gt 0 ]; then
-    docker run --name node-provisioning-service -d -p 8080:8080 inaetics/node-provisioning /tmp/node-provisioning.sh
-  fi
-}
+SVC_IMAGENAME="inaetics/node-provisioning:latest"
+SVC_IMAGEREPO="https://github.com/INAETICS/node-provisioning-service"
 
 clean_up () {
     docker stop node-provisioning-service > /dev/null 2>/dev/null
-    exit
+    docker rm node-provisioning-service >/dev/null 2>/dev/null
+    cd $ORGDIR
+    exit 0
 }
+trap clean_up SIGHUP SIGINT SIGTERM
 
-case "$COMMAND" in
-  build)
-    echo "Building image inaetics/node-provisioning"
-    build_image
-    ;;
-  run)
-    echo "Running Node Agent Service" 
-    start_up
-    trap clean_up SIGHUP SIGINT SIGTERM
-    while true; do sleep 10; done
-    ;;
-  start)
-    echo "Starting Node Agent Service" 
-    start_up
-    ;;
-  stop)
-    echo "Stopping Node Agent Service" 
-    clean_up
-    ;;
-  *)
-    echo "Usage: $0 {build|run|start|stop}"
-    exit 1
-    ;;
-esac
+echo "Looking for image: ${SVC_IMAGENAME}"
+svcimage=$(docker/find_image $SVC_IMAGENAME)
+if [ ! "$svcimage" == "" ]; then
+  echo "Using local image $svcimage"
+else
+  echo "No local image found!.."
+  echo "Trying registries.."
+  registries=($(etcd/values /inaetics/docker-registry-service))
+  svcimage=$(docker/pull_image $SVC_IMAGENAME "${registries[@]}")
 
-cd $PWD
-exit 0
+  if [ ! "$svcimage" == "" ]; then
+    echo "Using pulled image $svcimage"
+  else
+    echo "No upstream image found!.."
+    echo "Attempting local build.."
+    tmpdir=$(mktemp -d)
+    git clone $SVC_IMAGEREPO $tmpdir
+    builder/build_image $SVC_IMAGENAME $tmpdir
+    svcimage=$(docker/find_image $SVC_IMAGENAME)
+
+    if [ "$svcimage" == "" ]; then
+      echo "Unable to locate or build image.... aborting!!" 1>&2
+      exit 1
+    fi
+  fi
+fi
+
+echo "provisioning start"
+    docker rm node-provisioning-service >/dev/null 2>/dev/null
+docker run --name node-provisioning-service -d -p 8080:8080 $svcimage \
+    /tmp/node-provisioning.sh
+
+while true; do
+  echo "looping"
+  sleep 10 &
+  wait $!
+done
+
