@@ -32,7 +32,7 @@ Vagrant.configure("2") do |config|
     end
 
     # Provision with nfs
-    # config.vm.synced_folder ".", "/var/lib/node-provisioning-service", id: "node-provisioning-service", :nfs => true, :mount_options => ['nolock,vers=3,udp']
+    # config.vm.synced_folder ".", "/mnt/node-provisioning-service", id: "node-provisioning-service", :nfs => true, :mount_options => ['nolock,vers=3,udp']
 
     # Provision with shell
     # config.vm.provision :file, :source => ".", :destination => "/tmp/node-provisioning-service"
