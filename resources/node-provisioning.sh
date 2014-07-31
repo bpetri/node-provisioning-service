@@ -63,9 +63,8 @@ stop_provisioning () {
 
 clean_up () {
   stop_provisioning
+  exit
 }
-
-
 
 #
 # Main
@@ -89,3 +88,9 @@ if $GOSH_NONINTERACTIVE; then
   JAVA_PROPS="$JAVA_PROPS -Dgosh.args=--nointeractive"
 fi
 start_provisioning
+
+while true; do
+  #TODO monitor JVM?
+  sleep 5 &
+  wait $1
+done
