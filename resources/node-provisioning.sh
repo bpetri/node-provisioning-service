@@ -92,5 +92,5 @@ start_provisioning
 while true; do
   #TODO monitor JVM?
   sleep 5 &
-  wait $1
+  wait $!
 done
