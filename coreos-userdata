@@ -5,7 +5,6 @@ coreos:
       discovery: http://172.17.8.100:4001/v2/keys/testcluster
       addr: $public_ipv4:4001
       peer-addr: $public_ipv4:7001
-      vv: true
   units:
     - name: etcd.service
       command: start
@@ -23,37 +22,22 @@ coreos:
 
         [Install]
         WantedBy=sockets.target
-    - name: node-provisioning-service.service
+    - name: node-bootstrap.service
       command: start
       runtime: no
       enable: true
       content: |
         [Unit]
-        Description=Node Provisioning Service
+        Description=Node Agent Service
         After=docker.service
         Requires=docker.service
 
         [Service]
-        ExecStartPre=/bin/bash -c 'if [ ! -d "/var/lib/node-provisioning-service" ]; then git clone https://github.com/INAETICS/node-provisioning-service.git /var/lib/node-provisioning-service; else cd /var/lib/node-provisioning-service; git pull; fi'
-        ExecStart=/var/lib/node-provisioning-service/node-provisioning-service -v
+        ExecStartPre=/bin/bash -c 'if [ ! -d "/var/lib/node-bootstrap" ]; then git clone https://github.com/INAETICS/node-bootstrap.git /var/lib/node-bootstrap; else cd /var/lib/node-bootstrap; git pull; fi'
+        ExecStart=/bin/bash -c '/var/lib/node-bootstrap/node-bootstrap -v %m $public_ipv4 node-provisioning'
         TimeoutSec=300
         Restart=always
         RestartSec=10
-
-        [Install]
-        WantedBy=multi-user.target
-    - name: node-provisioning-announce.service
-      command: start
-      runtime: no
-      enable: true
-      content: |
-        [Unit]
-        Description=Node Provisioning Announce
-        BindsTo=node-provisioning-service.service
-
-        [Service]
-        ExecStart=/bin/bash -c "while true; do etcdctl set /inaetics/node-provisioning-service/%m $public_ipv4:8080 --ttl 60; sleep 45; done"
-        ExecStopPost=/usr/bin/etcdctl rm /inaetics/node-provisioning-service/%m
 
         [Install]
         WantedBy=multi-user.target
