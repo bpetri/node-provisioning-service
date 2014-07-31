@@ -13,6 +13,8 @@ RUN apt-get update && apt-get upgrade -yq && apt-get install -yq --no-install-re
   curl \
   git && apt-get clean
 
+##ETCDCTL_INSTALL - instruct builder to install etcdctl
+
 ##JDK_INSTALL - instruct builder to install a JDK
 
 # Node agent resources
