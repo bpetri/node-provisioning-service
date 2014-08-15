@@ -26,4 +26,4 @@ RUN cd /tmp && curl -k -L https://github.com/coreos/etcd/releases/download/v0.4.
 # Node agent resources
 ADD resources /tmp
 
-CMD /bin/bash /tmp/node-provisioning.sh provisioning_node1 localhost
+CMD /bin/bash /tmp/node-provisioning.sh

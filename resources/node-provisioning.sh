@@ -76,17 +76,17 @@ clean_up () {
 #
 trap clean_up SIGHUP SIGINT SIGTERM
 
-provisioning_id=$1
-if [ "$provisioning_id" = "" ]; then
-  echo "provisioning_id param required!"
-  exit 1
-fi
+provisioning_id=$(hostname)
+#if [ "$provisioning_id" = "" ]; then
+#  echo "provisioning_id param required!"
+#  exit 1
+#fi
 
-provisioning_ipv4=$2
-if [ "$provisioning_ipv4" = "" ]; then
-  echo "provisioning_ipv4 param required!"
-  exit 1
-fi
+provisioning_ipv4=$(ifconfig eth0 | grep 'inet ' | awk '{print $2}' | sed 's/addr://')
+#if [ "$provisioning_ipv4" = "" ]; then
+#  echo "provisioning_ipv4 param required!"
+#  exit 1
+#fi
 
 JAVA_PROPS="-Dace.gogo.script=default-mapping.gosh"
 if $GOSH_NONINTERACTIVE; then
