@@ -13,7 +13,7 @@ Run [Apache ACE Server] (https://ace.apache.org/) as a CoreOS/Docker service.
 * Install Docker
 * Clone this repository: git clone https://github.com/INAETICS/node-provisioning-service.git
 * Build docker Image : docker build -t inaetics/node-provisioning node-provision-service
-* Run docker image: docker run -d -p 8080:8080 inaetics/node-provisioning 
+* Run docker image: docker run -d -p 8080:8080 --name=provisioning inaetics/node-provisioning 
 * [Optional] Run the docker image ineractive: docker run -t -i inaetics/node-provisioning /bin/bash
 * Check `http://localhost:8080`
 
