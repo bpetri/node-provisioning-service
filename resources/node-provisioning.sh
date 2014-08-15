@@ -47,6 +47,11 @@ _log() {
   echo $@ | awk '{print "[INFO] "$0}' >&2
 }
 
+start_etcd () {
+	/bin/etcd &
+	sleep 1
+}
+
 start_provisioning () {
   provisioning_pid=$!
   java $JAVA_PROPS -jar server-allinone.jar &
@@ -72,13 +77,13 @@ clean_up () {
 trap clean_up SIGHUP SIGINT SIGTERM
 
 provisioning_id=$1
-if [ "$provisioning_id" == "" ]; then
+if [ "$provisioning_id" = "" ]; then
   echo "provisioning_id param required!"
   exit 1
 fi
 
 provisioning_ipv4=$2
-if [ "$provisioning_ipv4" == "" ]; then
+if [ "$provisioning_ipv4" = "" ]; then
   echo "provisioning_ipv4 param required!"
   exit 1
 fi
@@ -87,6 +92,8 @@ JAVA_PROPS="-Dace.gogo.script=default-mapping.gosh"
 if $GOSH_NONINTERACTIVE; then
   JAVA_PROPS="$JAVA_PROPS -Dgosh.args=--nointeractive"
 fi
+
+start_etcd
 start_provisioning
 
 while true; do
