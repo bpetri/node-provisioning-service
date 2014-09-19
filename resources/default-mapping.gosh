@@ -1,103 +1,335 @@
+#################################
+# Routines                      # 
+#################################
 
-echo "Opening workspace"
-workspace = (ace:cw)
-
-echo "Indexing source bundles"
-sourceindex = (repo:index default-resources)
-
-echo "Opening source repo"
-sourcerepo = (repo:repo R5 $sourceindex)
-
-echo "Opening target repo"
-targetrepo = (repo:repo OBR "http://localhost:8080/obr/repository.xml")
-
-echo "Copying resources"
-each  ($sourcerepo find) {
-  identity = $it getIdentity
-  version = $it getVersion
-  if { (coll:first ($targetrepo find "(&(osgi.identity=$identity)(version=$version))")) } {
-    echo " -> resource exists: $identity/$version"
-  } {
-    devnull=(repo:cp $sourcerepo $targetrepo "(&(osgi.identity=$identity)(version=$version))")
-    echo " -> resource copied: $identity/$version"
-  }
-}
-
-echo "Handling autoconf"
-autoconf = (coll:first ($targetrepo find "(osgi.identity=org.apache.felix.deployment.rp.autoconf)"))
-if { $autoconf } { 
-  echo " -> autoconf resource exists"
-  if { (coll:first ($workspace lrp "(Bundle-SymbolicName=org.apache.felix.deployment.rp.autoconf)")) } { 
-    echo " -> autoconf artifact exists" 
-  } { 
-    identity = $autoconf getIdentity
-    version = $autoconf getVersion
-    name = "$identity - $version"
-    url = $autoconf getUrl
-    mimetype = $autoconf getMimetype
-    $workspace ca [ artifactName="$name" url="$url" mimetype="$mimetype" Bundle-SymbolicName="$identity" \
-           Bundle-Version="$version" Deployment-ProvidesResourceProcessor="org.osgi.deployment.rp.autoconf" ]
-    echo " -> autoconf resource created"
-  }
-} { 
-  echo " -> autoconf resource not found"
-}
-
-echo "Creating artifacts"
-each  ($targetrepo find "(!(osgi.identity=org.apache.felix.deployment.rp.autoconf))") {
-  identity = $it getIdentity
-  version = $it getVersion
-  name = "$identity - $version"
-  url = $it getUrl
-  mimetype = $it getMimetype
-  if { (coll:first ($workspace la "(&(Bundle-SymbolicName=$identity)(Bundle-Version=$version))")) } { 
-    echo " -> artifact exists: "$name
-  } {
-    if { $mimetype equals "application/xml:osgi-autoconf" } { 
-      $workspace ca [ artifactName="$name" url="$url" mimetype="$mimetype" \
-           filename="$name" processorPid="org.osgi.deployment.rp.autoconf" ] [ default="true" ]
-    } { 
-      $workspace ca [ artifactName="$name" url="$url" mimetype="$mimetype" \
-           Bundle-SymbolicName="$identity" Bundle-Version="$version" ] [ default="true"]
+# Utility routine that copies all resources from $source_repo to $target_repo
+# if they do not yet exist.
+copy_repositories={
+  each  ($source_repo find) {
+    identity = $it getIdentity
+    version = $it getVersion
+    if { (coll:first ($target_repo find "(&(osgi.identity=$identity)(version=$version))")) } {
+      echo " -> resource exists: $identity/$version"
+    } {
+      devnull=(repo:cp $source_repo $target_repo "(&(osgi.identity=$identity)(version=$version))")
+      echo " -> resource copied: $identity/$version"
     }
   }
 }
 
-echo "Ensuring default mappings"
-if { (coll:first ($workspace lf "(name=default)")) } { 
-  echo " -> feature exists" 
-} { 
-  $workspace cf "default"
-  echo " -> feature created" 
-}
-if { (coll:first ($workspace la2f "(rightEndpoint=*name=default*)")) } { 
-  echo " -> artifact mapping exists" 
-} { 
-  $workspace ca2f "(default=true)" "(name=default)" "10000" "1"
-  echo " -> artifact mapping created" 
-}
-if { (coll:first ($workspace ld "(name=default)")) } { 
-  echo " -> distribution exists" 
-} { 
-  $workspace cd "default"
-  echo " -> distribution created" 
-}
-if { (coll:first ($workspace lf2d "(leftEndpoint=*name=default*)")) } { 
-  echo " -> feature mapping exists" 
-} { 
-  $workspace cf2d "(name=default)" "(name=default)" "1" "1"
-  echo " -> feature mapping created" 
-}
-if { (coll:first ($workspace ld2t "(leftEndpoint=*name=default*)")) } { 
-  echo " -> target mapping exists" 
-} { 
-  $workspace cd2t "(name=default)" "(id=*)" "1" "1000"
-  echo " -> target mapping created" 
+# Utility routine that deploys the autoconf resource process into $workspace
+# if it is not yet present.
+ensure_autoconf={
+  echo "Handling autoconf"
+  autoconf = (coll:first ($target_repo find "(osgi.identity=org.apache.felix.deployment.rp.autoconf)"))
+  if { $autoconf } {
+    echo " -> autoconf resource exists"
+    if { (coll:first ($workspace lrp "(Bundle-SymbolicName=org.apache.felix.deployment.rp.autoconf)")) } {
+      echo " -> autoconf artifact exists"
+    } {
+      identity = $autoconf getIdentity
+      version = $autoconf getVersion
+      name = "$identity - $version"
+      url = $autoconf getUrl
+      mimetype = $autoconf getMimetype
+      $workspace ca [ artifactName="$name" url="$url" mimetype="$mimetype" Bundle-SymbolicName="$identity" \
+             Bundle-Version="$version" Deployment-ProvidesResourceProcessor="org.osgi.deployment.rp.autoconf" ]
+      echo " -> autoconf resource created"
+    }
+  } {
+    echo " -> autoconf resource not found"
+  }
 }
 
-echo "Comitting workspace"
-$workspace commit
+# Definition routine for creating a distribution mapping. A mapping must contain
+# a productname and zero or more distribution definitions. 
+distribution_map = {
+  productName=($args get "product")
+  distributions=($args get "distributions")
+  echo "Processing distribution mapping for product $prouctName"
+  _remove_distributions
+  _create_distributions
+}
 
-# Let events settle
-misc:sleep 1000
+# Definition routine for creating a feature mapping. A mapping must contain
+# a product name and zero or more feature definitions. 
+feature_map = {
+  productName=($args get "product")
+  features=($args get "features")
+  echo "Processing feature mapping for product $productName"
+  _remove_features
+  _create_features
+}
+
+# Supporting routine for distribution_map
+_create_distributions={
+  echo "Creating distributions for product" $productName
+  each $distributions {
+    distribution=$it
+    _create_distribution
+  }
+}
+
+# Supporting routine for distribution_map
+_create_distribution={
+  distributionName=($distribution get "name")
+  echo "Creating distribution " $distributionName
+  $workspace cd ["name"="$distributionName" "product"="$productName"]
+  distributionObject=(coll:first ($workspace ld "(name=$distributionName)"))
+  each ($distribution get "attributes"){
+    $distributionObject addAttribute ($it get "key") ($it get "value")
+  }
+  each ($distribution get "tags"){
+    $distributionObject addTag ($it get "key") ($it get "value")
+  }
+  each ($distribution get "features"){
+    featureName=($it get "name")
+    $workspace cf2d "(name=$featureName)" "(name=$distributionName)"
+  }
+}
+
+# Supporting routine for distribution_map
+_remove_distributions={
+  echo "Removing distributions for product name " $productName
+  distributionObjects=($workspace ld "(product=$productName)")
+  if { $distributionObjects } {\
+    each ($distributionObjects) {
+      distributionObject=$it 
+      distributionName=($it getAttribute "name")
+      _remove_distribution
+    }
+  }
+}
+
+# Supporting routine for distribution_map
+_remove_distribution={
+  echo "Removing distribution $distributionName"
+  f2ds=($workspace lf2d "(rightEndpoint=\(name=$distributionName\))")
+  if { $f2ds } {\
+    each $f2ds {
+      $workspace df2d $it
+    }
+    $workspace dd $distributionObject
+  }
+}
+
+# Supporting routine for feature_map
+_remove_features={
+  echo "Removing features for product $productName"
+  featureObjects=($workspace lf "(product=$productName)")
+  if { ($featureObjects) }{\
+    each ($featureObjects) {
+      featureObject=($it)
+      featureName=($featureObject getAttribute "name")
+      _remove_feature
+    }
+  }
+}
+
+# Supporting routine for feature_map
+_remove_feature={
+  echo "Removing feature $featureName"
+  a2fs=($workspace la2f "(rightEndpoint=\(name=$featureName\))")
+  each $a2fs {
+    $workspace da2f $it
+  }
+  $workspace df $featureObject
+}
+
+# Supporting routine for feature_map
+_create_features = {
+  echo "Creating features for product name $productName"
+  each ($features) {
+    feature=($it)
+    featureName=($feature get "name")
+    _create_feature
+  }
+}
+
+# Supporting routine for feature_map
+_create_feature={
+  echo "Creating feature $featureName"
+  $workspace cf ["name"="$featureName" "product"="$productName"]
+  featureObject=(coll:first ($workspace lf "(name=$featureName)"))
+  if{ ($feature get "attributes") }{ \
+    each ($feature get "attributes"){
+      $featureObject addAttribute ($it get "key") ($it get "value")
+    }
+  }
+  if{ ($feature get "tags") }{ \
+    each ($feature get "tags"){
+      $featureObject addTag ($it get "key") ($it get "value")
+    }
+  }
+  featureArtifacts=($feature get "artifacts")
+  if { $featureArtifacts }{\
+    each ($featureArtifacts) {
+      artifact=$it
+      artifactIdentity=($artifact get "identity")
+      artifactVersion=($artifact get "version")
+      artifactName = "$artifactIdentity - $artifactVersion"
+      artifactObject=(coll:first ($workspace la "(artifactName=$artifactName)"))
+      if { ($artifactObject) }{\
+        echo "Found existing artifact $artifactName"
+      }{\
+        _create_artifact
+      }
+      $workspace ca2f "(artifactName=$artifactName)" "(name=$featureName)"
+    }
+  }
+}
+
+# Supporting routine for feature_map
+_create_artifact={
+  echo "Creating new artifact for $artifactIdentity/$artifactVersion"
+  resource = (coll:first ($target_repo find "(&(osgi.identity=$artifactIdentity)(version=$artifactVersion))"))
+  if { ($resource) }{\
+    resourceUrl = ($resource getUrl)
+    resourceType = ($resource getMimetype)
+    if { $resourceType equals "application/xml:osgi-autoconf" }{\
+      $workspace ca [ artifactName="$artifactName" url="$resourceUrl" mimetype="$resourceType" filename="$artifactName" processorPid="org.osgi.deployment.rp.autoconf" ]
+    }{\
+      $workspace ca [ artifactName="$artifactName" url="$resourceUrl" mimetype="$resourceType" Bundle-SymbolicName="$artifactIdentity" Bundle-Version="$artifactVersion" ]
+    }
+    artifactObject=(coll:first ($workspace la "(artifactName=$artifactName)"))
+    echo "Created $artifactObject"
+  }{\
+    echo "Unable to locate resource for artifact $artifactName"
+    $failures add "Unable to locate resource: $artifactName"
+  }
+}
+
+#################################
+# Main                          # 
+#################################
+
+failures=[]
+
+source_index = (repo:index default-resources)
+source_repo = (repo:repo "R5" "$source_index")
+target_repo = (repo:repo "OBR" "http://localhost:8080/obr/repository.xml")
+
+echo "Deploying resources"
+copy_repositories
+
+echo "Opening workspace"
+workspace = (ace:cw)
+
+echo "Ensuring autoconf"
+ensure_autoconf
+
+feature_map [
+  "product"="demonstrator"
+  "features"= [
+    [
+      "name"="agent base"
+      "artifacts"=[
+        [ "identity"="org.apache.felix.configadmin" "version"="1.6.1.R1515316"]
+        [ "identity"="org.apache.felix.dependencymanager" "version"="3.1.0"]
+        [ "identity"="org.apache.felix.eventadmin" "version"="1.3.2"]
+        [ "identity"="org.apache.felix.log" "version"="1.0.1"]
+        [ "identity"="org.apache.felix.metatype" "version"="1.0.8"]
+      ]
+    ]
+    [
+      "name"="agent shell"
+      "artifacts"=[
+        [ "identity"="org.apache.felix.gogo.command" "version"="0.12.0"]
+        [ "identity"="org.apache.felix.gogo.runtime" "version"="0.12.0"]
+        [ "identity"="org.apache.felix.gogo.shell" "version"="0.10.0"]
+        [ "identity"="org.apache.felix.dependencymanager.shell" "version"="3.0.1.SNAPSHOT"]
+      ]
+    ]
+    [
+      "name"="agent web"
+      "artifacts"=[
+        [ "identity"="javax.servlet" "version"="2.5.0.v200910301333"]
+        [ "identity"="org.apache.felix.http.jetty" "version"="2.2.0"]
+      ]
+    ]
+    [
+      "name"="agent console"
+      "artifacts"=[
+        [ "identity"="de.twentyeleven.skysail.org.json-osgi" "version"="20080701.0.0"]
+        [ "identity"="org.apache.commons.fileupload" "version"="1.3.1"]
+        [ "identity"="org.apache.commons.io" "version"="2.4.0"]
+        [ "identity"="org.apache.felix.webconsole" "version"="4.2.2"]
+      ]
+    ]
+    [
+      "name"="agent remote"
+      "artifacts"=[
+        [ "identity"="org.osgi.service.remoteserviceadmin" "version"="6.0.0.201403170857"]
+        [ "identity"="org.amdatu.remote.admin.http" "version"="0.1.2"]
+        [ "identity"="org.amdatu.remote.discovery.etcd" "version"="0.1.1"]
+        [ "identity"="org.amdatu.remote.topology.promiscuous" "version"="0.1.2"]
+      ]
+    ]
+    [
+      "name"="calc server"
+      "artifacts"=[
+        [ "identity"="org.amdatu.remote.demo.calculator.demo.api" "version"="0.1.0"]
+        [ "identity"="org.amdatu.remote.demo.calculator.demo.server" "version"="0.1.0"]
+      ]
+    ]
+    [
+      "name"="calc client"
+      "artifacts"=[
+        [ "identity"="org.amdatu.remote.demo.calculator.demo.api" "version"="0.1.0"]
+        [ "identity"="org.amdatu.remote.demo.calculator.demo.client" "version"="0.1.0"]
+      ]
+    ]
+  ]
+]
+
+distribution_map [
+  "product"="demonstrator"
+  "distributions"=[
+    [
+      "name"="node agent"
+      "features"=[
+        ["name"="agent base"]
+        ["name"="agent shell"]
+        ["name"="agent web" ]
+        ["name"="agent console" ]
+        ["name"="agent remote" ]
+      ]
+      "attributes"=[]
+      "tags"=[]
+    ]
+    [
+      "name"="calc server"
+      "features"=[
+        ["name"="calc server"]
+      ]
+      "attributes"=[]
+      "tags"=[]
+    ]
+    [
+      "name"="calc client"
+      "features"=[
+        ["name"="calc client"]
+      ]
+      "attributes"=[]
+      "tags"=[]
+    ]
+  ]
+]
+
+failureSize=($failures size)
+if { math:gt $failureSize 0 }{\
+  echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+  echo "Not committing workspace due to failures:"
+  echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+  each $failures {
+    echo $it
+  }
+  echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+}{\
+  echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+  echo "Committing workspace!"
+  echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+  $workspace commit
+  echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+}
 ace:rw $workspace
