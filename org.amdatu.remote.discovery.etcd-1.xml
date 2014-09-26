@@ -1,0 +1,16 @@
+<MetaData xmlns="http://www.osgi.org/xmlns/metatype/v1.0.0">
+  <OCD name='ocd' id='ocd'>
+    <AD id='org.amdatu.remote.discovery.etcd.connecturl' type='STRING' cardinality='0' />
+    <AD id='org.amdatu.remote.discovery.etcd.rootpath' type='STRING' cardinality='0' />
+  </OCD>
+  <Designate pid='org.amdatu.remote.discovery.etcd' bundle="osgi-dp:org.amdatu.remote.discovery.etcd">
+    <Object ocdref='ocd'>
+      <Attribute adref='org.amdatu.remote.discovery.etcd.connecturl'>
+        <Value><![CDATA[http://127.0.0.1:4001]]></Value>
+      </Attribute>
+      <Attribute adref='org.amdatu.remote.discovery.etcd.rootpath'>
+        <Value><![CDATA[/]]></Value>
+      </Attribute>
+    </Object>
+  </Designate>
+</MetaData>
