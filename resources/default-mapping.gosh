@@ -269,14 +269,14 @@ feature_map [
       "name"="calc server"
       "artifacts"=[
         [ "identity"="org.amdatu.remote.demo.calculator.demo.api" "version"="0.1.0"]
-        [ "identity"="org.amdatu.remote.demo.calculator.demo.server" "version"="0.1.0"]
+        [ "identity"="org.amdatu.remote.demo.calculator.demo.server" "version"="0.1.0.201409250901"]
       ]
     ]
     [
       "name"="calc client"
       "artifacts"=[
         [ "identity"="org.amdatu.remote.demo.calculator.demo.api" "version"="0.1.0"]
-        [ "identity"="org.amdatu.remote.demo.calculator.demo.client" "version"="0.1.0"]
+        [ "identity"="org.amdatu.remote.demo.calculator.demo.client" "version"="0.1.0.201409250901"]
       ]
     ]
   ]
