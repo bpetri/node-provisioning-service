@@ -8,6 +8,7 @@ copy_repositories={
   each  ($source_repo find) {
     identity = $it getIdentity
     version = $it getVersion
+
     if { (coll:first ($target_repo find "(&(osgi.identity=$identity)(version=$version))")) } {
       echo " -> resource exists: $identity/$version"
     } {
@@ -222,6 +223,30 @@ feature_map [
   "product"="demonstrator"
   "features"= [
     [
+      "name"="celix_common"
+      "artifacts"=[
+        [ "identity"="apache_celix_remote_service_admin_http" "version"="0.0.1"]
+        [ "identity"="apache_celix_rs_topology_manager" "version"="0.0.1"]
+        [ "identity"="apache_celix_rsa_discovery_etcd" "version"="0.0.1"]
+        [ "identity"="apache_celix_shell" "version"="1.0.0.incubating"]
+        [ "identity"="apache_celix_shell_tui" "version"="1.0.0.incubating"]
+      ]
+    ]
+    [
+      "name"="celix_calc_client"
+      "artifacts"=[
+        [ "identity"="apache_celix_remoting_calculator_shell" "version"="0.0.1"]
+        [ "identity"="apache_celix_remoting_calculator_proxy" "version"="0.0.1"]
+      ]
+    ]
+    [
+      "name"="celix_calc_server"
+      "artifacts"=[
+        [ "identity"="apache_celix_remoting_calculator_impl" "version"="0.0.1"]
+        [ "identity"="apache_celix_remoting_calculator_endpoint" "version"="0.0.1"]
+      ]
+    ]
+    [
       "name"="agent base"
       "artifacts"=[
         [ "identity"="org.apache.felix.configadmin" "version"="1.6.1.R1515316"]
@@ -285,6 +310,30 @@ feature_map [
 distribution_map [
   "product"="demonstrator"
   "distributions"=[
+    [
+      "name"="celix_common"
+      "features"=[
+        ["name"="celix_common"]
+      ]
+      "attributes"=[]
+      "tags"=[]
+    ]
+    [
+      "name"="celix_calc_server"
+      "features"=[
+        ["name"="celix_calc_server"]
+      ]
+      "attributes"=[]
+      "tags"=[]
+    ]
+    [
+      "name"="celix_calc_client"
+      "features"=[
+        ["name"="celix_calc_client"]
+      ]
+      "attributes"=[]
+      "tags"=[]
+    ]
     [
       "name"="node agent"
       "features"=[
