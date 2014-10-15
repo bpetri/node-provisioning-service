@@ -13,6 +13,9 @@ DEBUG_LOG=true
 #
 source etcdctl.sh
 
+MAX_RETRY_ETCD_REPO=10
+RETRY_ETCD_REPO_INTERVAL=5
+
 #
 # Functions
 #
@@ -47,10 +50,36 @@ _log() {
   echo $@ | awk '{print "[INFO] "$0}' >&2
 }
 
+function store_etcd_data(){
+
+  PROVISIONING_ETCD_PATH_FOUND=0
+  RETRY=1
+  while [ $RETRY -le $MAX_RETRY_ETCD_REPO ] && [ $PROVISIONING_ETCD_PATH_FOUND -eq 0 ]
+  do
+
+    etcd/put "/inaetics/node-provisioning-service/$provisioning_id" "$provisioning_ipv4:8080"
+
+    if [ $? -ne 0 ]; then
+        echo "Tentative $RETRY of storing Provisioning Server to etcd failed. Retrying..."
+        ((RETRY+=1))
+        sleep $RETRY_ETCD_REPO_INTERVAL
+    else
+        _log "Pair </inaetics/node-provisioning-service/$provisioning_id,$provisioning_ipv4:8080> stored in etcd"
+        PROVISIONING_ETCD_PATH_FOUND=1
+    fi
+  done
+
+  if [ $PROVISIONING_ETCD_PATH_FOUND -eq 0 ]; then
+    echo "Cannot store pair </inaetics/node-provisioning-service/$provisioning_id,$provisioning_ipv4:8080> stored in etcd"
+  fi
+
+}
+
 start_provisioning () {
   provisioning_pid=$!
   java $JAVA_PROPS -jar server-allinone.jar &
-  etcd/put "/inaetics/node-provisioning-service/$provisioning_id" "$provisioning_ipv4:8080"
+  store_etcd_data
+  #etcd/put "/inaetics/node-provisioning-service/$provisioning_id" "$provisioning_ipv4:8080"
 }
 
 stop_provisioning () {
