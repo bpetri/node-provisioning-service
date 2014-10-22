@@ -230,6 +230,7 @@ feature_map [
         [ "identity"="apache_celix_rsa_discovery_etcd" "version"="0.0.1"]
         [ "identity"="apache_celix_shell" "version"="1.0.0.incubating"]
         [ "identity"="apache_celix_shell_tui" "version"="1.0.0.incubating"]
+        [ "identity"="apache_celix_remote_shell" "version"="0.0.1"]
       ]
     ]
     [
