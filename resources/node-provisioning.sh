@@ -56,21 +56,20 @@ function store_etcd_data(){
   RETRY=1
   while [ $RETRY -le $MAX_RETRY_ETCD_REPO ] && [ $PROVISIONING_ETCD_PATH_FOUND -eq 0 ]
   do
-
-    etcd/put "/inaetics/node-provisioning-service/$provisioning_id" "$provisioning_ipv4:8080"
+    etcd/put "/inaetics/node-provisioning-service/$provisioning_id" "$provisioning_ipv4:$provisioning_port"
 
     if [ $? -ne 0 ]; then
         echo "Tentative $RETRY of storing Provisioning Server to etcd failed. Retrying..."
         ((RETRY+=1))
         sleep $RETRY_ETCD_REPO_INTERVAL
     else
-        _log "Pair </inaetics/node-provisioning-service/$provisioning_id,$provisioning_ipv4:8080> stored in etcd"
+        _log "Pair </inaetics/node-provisioning-service/$provisioning_id,$provisioning_ipv4:$provisioning_port> stored in etcd"
         PROVISIONING_ETCD_PATH_FOUND=1
     fi
   done
 
   if [ $PROVISIONING_ETCD_PATH_FOUND -eq 0 ]; then
-    echo "Cannot store pair </inaetics/node-provisioning-service/$provisioning_id,$provisioning_ipv4:8080> stored in etcd"
+    echo "Cannot store pair </inaetics/node-provisioning-service/$provisioning_id,$provisioning_ipv4:$provisioning_port> stored in etcd"
   fi
 
 }
@@ -79,7 +78,7 @@ start_provisioning () {
   provisioning_pid=$!
   java $JAVA_PROPS -jar server-allinone.jar &
   store_etcd_data
-  #etcd/put "/inaetics/node-provisioning-service/$provisioning_id" "$provisioning_ipv4:8080"
+  #etcd/put "/inaetics/node-provisioning-service/$provisioning_id" "$provisioning_ipv4:$provisioning_port"
 }
 
 stop_provisioning () {
@@ -102,14 +101,28 @@ trap clean_up SIGHUP SIGINT SIGTERM
 
 provisioning_id=$1
 if [ "$provisioning_id" == "" ]; then
+  # get docker id
+  provisioning_id=`cat /proc/self/cgroup | grep -o  -e "docker-.*.scope" | head -n 1 | sed "s/docker-\(.*\).scope/\\1/"`
+fi
+if [ "$provisioning_id" == "" ]; then
   echo "provisioning_id param required!"
   exit 1
 fi
 
 provisioning_ipv4=$2
 if [ "$provisioning_ipv4" == "" ]; then
+  # get ip from env variable set by kubernetes
+  provisioning_ipv4=$SERVICE_HOST
+fi
+if [ "$provisioning_ipv4" == "" ]; then
   echo "provisioning_ipv4 param required!"
   exit 1
+fi
+
+# get port from env variable set by kubernetes pod config
+provisioning_port=$HOSTPORT
+if [ "$provisioning_port" == "" ]; then
+  provisioning_port=8080
 fi
 
 JAVA_PROPS="-Dace.gogo.script=default-mapping.gosh"
