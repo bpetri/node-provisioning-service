@@ -75,8 +75,8 @@ function store_etcd_data(){
 }
 
 start_provisioning () {
-  provisioning_pid=$!
   java $JAVA_PROPS -jar server-allinone.jar &
+  provisioning_pid=$!
   store_etcd_data
   #etcd/put "/inaetics/node-provisioning-service/$provisioning_id" "$provisioning_ipv4:$provisioning_port"
 }
