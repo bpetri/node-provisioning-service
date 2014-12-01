@@ -286,7 +286,7 @@ feature_map [
       "name"="agent remote"
       "artifacts"=[
         [ "identity"="org.osgi.service.remoteserviceadmin" "version"="6.0.0.201403170857"]
-        [ "identity"="org.amdatu.remote.admin.http" "version"="0.1.2"]
+        [ "identity"="org.amdatu.remote.admin.http" "version"="0.1.1"]
         [ "identity"="org.amdatu.remote.discovery.etcd" "version"="0.1.1"]
         [ "identity"="org.amdatu.remote.topology.promiscuous" "version"="0.1.2"]
       ]

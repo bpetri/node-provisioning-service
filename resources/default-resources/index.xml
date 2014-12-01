@@ -444,7 +444,7 @@
     <capability namespace='osgi.identity'>
       <attribute name='osgi.identity' value='org.amdatu.remote.admin.http'/>
       <attribute name='type' value='osgi.bundle'/>
-      <attribute name='version' type='Version' value='0.1.2'/>
+      <attribute name='version' type='Version' value='0.1.1'/>
     </capability>
     <capability namespace='osgi.content'>
       <attribute name='osgi.content' value='ed5ef7596cb5231614664b02933fbd02af9bbaa0bba471e6b92c61f8d7d124d5'/>
@@ -454,11 +454,11 @@
     </capability>
     <capability namespace='osgi.wiring.bundle'>
       <attribute name='osgi.wiring.bundle' value='org.amdatu.remote.admin.http'/>
-      <attribute name='bundle-version' type='Version' value='0.1.2'/>
+      <attribute name='bundle-version' type='Version' value='0.1.1'/>
     </capability>
     <capability namespace='osgi.wiring.host'>
       <attribute name='osgi.wiring.host' value='org.amdatu.remote.admin.http'/>
-      <attribute name='bundle-version' type='Version' value='0.1.2'/>
+      <attribute name='bundle-version' type='Version' value='0.1.1'/>
     </capability>
     <capability namespace='osgi.remoteserviceadmin.distribution'>
       <attribute name='configs' type='List&lt;String&gt;' value='org.amdatu.remote.admin.http'/>
