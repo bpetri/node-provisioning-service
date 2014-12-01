@@ -111,8 +111,8 @@ fi
 
 provisioning_ipv4=$2
 if [ "$provisioning_ipv4" == "" ]; then
-  # get ip from env variable set by kubernetes
-  provisioning_ipv4=$KUBERNETES_SERVICE_HOST
+  # get IP
+  provisioning_ipv4=`hostname -I`
 fi
 if [ "$provisioning_ipv4" == "" ]; then
   echo "provisioning_ipv4 param required!"
