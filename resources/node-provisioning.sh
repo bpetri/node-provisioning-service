@@ -112,7 +112,7 @@ fi
 provisioning_ipv4=$2
 if [ "$provisioning_ipv4" == "" ]; then
   # get IP
-  provisioning_ipv4=`hostname -I`
+  provisioning_ipv4=`hostname -i`
 fi
 if [ "$provisioning_ipv4" == "" ]; then
   echo "provisioning_ipv4 param required!"
