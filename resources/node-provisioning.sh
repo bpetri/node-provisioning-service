@@ -15,6 +15,8 @@ source etcdctl.sh
 
 MAX_RETRY_ETCD_REPO=10
 RETRY_ETCD_REPO_INTERVAL=5
+ETCD_TTL_INTERVALL=60
+ETCD_REWRITE_INTERVALL=45
 
 #
 # Functions
@@ -52,14 +54,20 @@ _log() {
 
 function store_etcd_data(){
 
+  # check if provisioning is running
+  if [ "$provisioning_id" == "" ]; then
+  	_log "service not running, skipping store_etcd_data"
+    return
+  fi
+
   PROVISIONING_ETCD_PATH_FOUND=0
   RETRY=1
   while [ $RETRY -le $MAX_RETRY_ETCD_REPO ] && [ $PROVISIONING_ETCD_PATH_FOUND -eq 0 ]
   do
-    etcd/put "/inaetics/node-provisioning-service/$provisioning_id" "$provisioning_ipv4:$provisioning_port"
+    etcd/putTtl "/inaetics/node-provisioning-service/$provisioning_id" "$provisioning_ipv4:$provisioning_port" "$ETCD_TTL_INTERVALL"
 
     if [ $? -ne 0 ]; then
-        echo "Tentative $RETRY of storing Provisioning Server to etcd failed. Retrying..."
+        _log "Tentative $RETRY of storing Provisioning Server to etcd failed. Retrying..."
         ((RETRY+=1))
         sleep $RETRY_ETCD_REPO_INTERVAL
     else
@@ -69,7 +77,7 @@ function store_etcd_data(){
   done
 
   if [ $PROVISIONING_ETCD_PATH_FOUND -eq 0 ]; then
-    echo "Cannot store pair </inaetics/node-provisioning-service/$provisioning_id,$provisioning_ipv4:$provisioning_port> stored in etcd"
+    _log "Cannot store pair </inaetics/node-provisioning-service/$provisioning_id,$provisioning_ipv4:$provisioning_port> in etcd"
   fi
 
 }
@@ -77,8 +85,6 @@ function store_etcd_data(){
 start_provisioning () {
   java $JAVA_PROPS -jar server-allinone.jar &
   provisioning_pid=$!
-  store_etcd_data
-  #etcd/put "/inaetics/node-provisioning-service/$provisioning_id" "$provisioning_ipv4:$provisioning_port"
 }
 
 stop_provisioning () {
@@ -105,7 +111,7 @@ if [ "$provisioning_id" == "" ]; then
   provisioning_id=`cat /proc/self/cgroup | grep -o  -e "docker-.*.scope" | head -n 1 | sed "s/docker-\(.*\).scope/\\1/"`
 fi
 if [ "$provisioning_id" == "" ]; then
-  echo "provisioning_id param required!"
+  _log "provisioning_id param required!"
   exit 1
 fi
 
@@ -115,7 +121,7 @@ if [ "$provisioning_ipv4" == "" ]; then
   provisioning_ipv4=`hostname -i`
 fi
 if [ "$provisioning_ipv4" == "" ]; then
-  echo "provisioning_ipv4 param required!"
+  _log "provisioning_ipv4 param required!"
   exit 1
 fi
 
@@ -129,10 +135,13 @@ JAVA_PROPS="-Dace.gogo.script=default-mapping.gosh"
 if $GOSH_NONINTERACTIVE; then
   JAVA_PROPS="$JAVA_PROPS -Dgosh.args=--nointeractive"
 fi
+
 start_provisioning
 
 while true; do
   #TODO monitor JVM?
-  sleep 5 &
+  _log "store to etcd and wait..."
+  store_etcd_data
+  sleep $ETCD_REWRITE_INTERVALL &
   wait $!
 done
