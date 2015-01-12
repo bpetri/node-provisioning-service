@@ -229,12 +229,11 @@ feature_map [
         [ "identity"="apache_celix_rs_topology_manager" "version"="0.0.1"]
         [ "identity"="apache_celix_rsa_discovery_etcd" "version"="0.0.1"]
         [ "identity"="apache_celix_shell" "version"="1.0.0.incubating"]
-        [ "identity"="apache_celix_shell_tui" "version"="1.0.0.incubating"]
         [ "identity"="apache_celix_remote_shell" "version"="0.0.1"]
       ]
     ]
     [
-      "name"="celix_demonstrator_queue"
+      "name"="celix_demo_queue"
       "artifacts"=[
         [ "identity"="org.inaetics.demonstrator.sample_queue" "version"="1.0.0"]
         [ "identity"="org.inaetics.demonstrator.queue_endpoint" "version"="1.0.0"]
@@ -242,7 +241,7 @@ feature_map [
       ]
     ]
     [
-      "name"="celix_demonstrator_producer"
+      "name"="celix_demo_producer"
       "artifacts"=[
         [ "identity"="org.inaetics.demonstrator.producer" "version"="1.0.0"]
         [ "identity"="org.inaetics.demonstrator.queue_proxy" "version"="1.0.0"]
@@ -250,7 +249,7 @@ feature_map [
       ]
     ]
     [
-      "name"="celix_demonstrator_datastore"
+      "name"="celix_demo_datastore"
       "artifacts"=[
         [ "identity"="org.inaetics.demonstrator.data_store" "version"="1.0.0"]
         [ "identity"="org.inaetics.demonstrator.data_store_endpoint" "version"="1.0.0"]
@@ -258,7 +257,7 @@ feature_map [
       ]
     ]
     [
-      "name"="celix_demonstrator_processor"
+      "name"="celix_demo_processor"
       "artifacts"=[
         [ "identity"="org.inaetics.demonstrator.processor" "version"="1.0.0"]
         [ "identity"="org.inaetics.demonstrator.queue_proxy" "version"="1.0.0"]
@@ -267,14 +266,14 @@ feature_map [
       ]
     ]
     [
-      "name"="celix_demonstrator_statistic_tracker"
+      "name"="celix_demo_statistic_tracker"
       "artifacts"=[
         [ "identity"="org.inaetics.demonstrator.statistic_tracker" "version"="1.0.0"]
         [ "identity"="org.inaetics.demonstrator.stats_provider_proxy" "version"="1.0.0"]
       ]
     ]
     [
-      "name"="felix_demonstrator_base"
+      "name"="felix_demo_base"
       "artifacts"=[
         [ "identity"="org.inaetics.demonstrator.api.data" "version"="1.0.0.201412020959"]
         [ "identity"="org.inaetics.demonstrator.api.datastore" "version"="1.0.0.201412020959"]
@@ -285,31 +284,31 @@ feature_map [
       ]
     ]
     [
-      "name"="felix_demonstrator_queue"
+      "name"="felix_demo_queue"
       "artifacts"=[
         [ "identity"="org.inaetics.demonstrator.java_impl.queue" "version"="0"]
       ]
     ]
     [
-      "name"="felix_demonstrator_producer"
+      "name"="felix_demo_producer"
       "artifacts"=[
         [ "identity"="org.inaetics.demonstrator.java_impl.producer" "version"="0"]
       ]
     ]
     [
-      "name"="felix_demonstrator_datastore"
+      "name"="felix_demo_datastore"
       "artifacts"=[
         [ "identity"="org.inaetics.demonstrator.java_impl.datastore" "version"="0"]
       ]
     ]
     [
-      "name"="felix_demonstrator_processor"
+      "name"="felix_demo_processor"
       "artifacts"=[
         [ "identity"="org.inaetics.demonstrator.java_impl.processor" "version"="0"]
       ]
     ]
     [
-      "name"="felix_demonstrator_viewer"
+      "name"="felix_demo_viewer"
       "artifacts"=[
         [ "identity"="org.inaetics.demonstrator.java_impl.view" "version"="0"]
       ]
@@ -378,46 +377,46 @@ distribution_map [
       "tags"=[]
     ]
     [
-      "name"="celix_demonstrator_queue"
+      "name"="celix_demo_queue"
       "features"=[
         ["name"="celix_common"]
-        ["name"="celix_demonstrator_queue"]
+        ["name"="celix_demo_queue"]
       ]
       "attributes"=[]
       "tags"=[]
     ]
     [
-      "name"="celix_demonstrator_producer"
+      "name"="celix_demo_producer"
       "features"=[
         ["name"="celix_common"]
-        ["name"="celix_demonstrator_producer"]
+        ["name"="celix_demo_producer"]
       ]
       "attributes"=[]
       "tags"=[]
     ]
     [
-      "name"="celix_demonstrator_datastore"
+      "name"="celix_demo_datastore"
       "features"=[
         ["name"="celix_common"]
-        ["name"="celix_demonstrator_datastore"]
+        ["name"="celix_demo_datastore"]
       ]
       "attributes"=[]
       "tags"=[]
     ]
     [
-      "name"="celix_demonstrator_processor"
+      "name"="celix_demo_processor"
       "features"=[
         ["name"="celix_common"]
-        ["name"="celix_demonstrator_processor"]
+        ["name"="celix_demo_processor"]
       ]
       "attributes"=[]
       "tags"=[]
     ]
     [
-      "name"="celix_demonstrator_statistic_tracker"
+      "name"="celix_demo_statistic_tracker"
       "features"=[
         ["name"="celix_common"]
-        ["name"="celix_demonstrator_statistic_tracker"]
+        ["name"="celix_demo_statistic_tracker"]
       ]
       "attributes"=[]
       "tags"=[]
@@ -435,84 +434,84 @@ distribution_map [
       "tags"=[]
     ]
     [
-      "name"="felix_demonstrator_common"
+      "name"="felix_demo_common"
       "features"=[
         ["name"="agent base"]
         ["name"="agent shell"]
         ["name"="agent web" ]
         ["name"="agent console" ]
         ["name"="agent remote" ]
-        ["name"="felix_demonstrator_base" ]
+        ["name"="felix_demo_base" ]
       ]
       "attributes"=[]
       "tags"=[]
     ]
     [
-      "name"="felix_demonstrator_queue"
+      "name"="felix_demo_queue"
       "features"=[
         ["name"="agent base"]
         ["name"="agent shell"]
         ["name"="agent web" ]
         ["name"="agent console" ]
         ["name"="agent remote" ]
-        ["name"="felix_demonstrator_base" ]
-        ["name"="felix_demonstrator_queue"]
+        ["name"="felix_demo_base" ]
+        ["name"="felix_demo_queue"]
       ]
       "attributes"=[]
       "tags"=[]
     ]
     [
-      "name"="felix_demonstrator_producer"
+      "name"="felix_demo_producer"
       "features"=[
         ["name"="agent base"]
         ["name"="agent shell"]
         ["name"="agent web" ]
         ["name"="agent console" ]
         ["name"="agent remote" ]
-        ["name"="felix_demonstrator_base" ]
-        ["name"="felix_demonstrator_producer"]
+        ["name"="felix_demo_base" ]
+        ["name"="felix_demo_producer"]
       ]
       "attributes"=[]
       "tags"=[]
     ]
     [
-      "name"="felix_demonstrator_datastore"
+      "name"="felix_demo_datastore"
       "features"=[
         ["name"="agent base"]
         ["name"="agent shell"]
         ["name"="agent web" ]
         ["name"="agent console" ]
         ["name"="agent remote" ]
-        ["name"="felix_demonstrator_base" ]
-        ["name"="felix_demonstrator_datastore"]
+        ["name"="felix_demo_base" ]
+        ["name"="felix_demo_datastore"]
       ]
       "attributes"=[]
       "tags"=[]
     ]
     [
-      "name"="felix_demonstrator_processor"
+      "name"="felix_demo_processor"
       "features"=[
         ["name"="agent base"]
         ["name"="agent shell"]
         ["name"="agent web" ]
         ["name"="agent console" ]
         ["name"="agent remote" ]
-        ["name"="felix_demonstrator_base" ]
-        ["name"="felix_demonstrator_processor"]
+        ["name"="felix_demo_base" ]
+        ["name"="felix_demo_processor"]
       ]
       "attributes"=[]
       "tags"=[]
     ]
     [
-      "name"="felix_demonstrator_viewer"
+      "name"="felix_demo_viewer"
       "features"=[
         ["name"="agent base"]
         ["name"="agent shell"]
         ["name"="agent web" ]
         ["name"="agent console" ]
         ["name"="agent remote" ]
-        ["name"="felix_demonstrator_base" ]
-        ["name"="felix_demonstrator_viewer"]
+        ["name"="felix_demo_base" ]
+        ["name"="felix_demo_viewer"]
       ]
       "attributes"=[]
       "tags"=[]

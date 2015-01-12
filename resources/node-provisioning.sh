@@ -132,7 +132,7 @@ if [ "$provisioning_port" == "" ]; then
 fi
 
 JAVA_PROPS="-Dace.gogo.script=default-mapping.gosh"
-if $GOSH_NONINTERACTIVE; then
+if [ $GOSH_NONINTERACTIVE ]; then
   JAVA_PROPS="$JAVA_PROPS -Dgosh.args=--nointeractive"
 fi
 
