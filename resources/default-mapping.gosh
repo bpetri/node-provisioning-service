@@ -215,7 +215,7 @@ _create_artifact = {
 
 failures=[]
 
-source_index = (repo:index default-resources)
+source_index = (repo:index "default-resources")
 source_repo = (repo:repo "R5" "$source_index")
 target_repo = (repo:repo "OBR" "http://localhost:8080/obr/repository.xml")
 
@@ -486,29 +486,57 @@ create_target_mapping [
       "name"="celix_1"
       "distributions"=[
         ["name"="celix_demo_shared"]
-	["name"="celix_demo_datastore"]
+        ["name"="celix_demo_datastore"]
       ]
     ]
     [
       "name"="celix_2"
       "distributions"=[
         ["name"="celix_demo_shared"]
-	["name"="celix_demo_processor"]
+        ["name"="celix_demo_processor"]
+      ]
+    ]
+    [
+      "name"="celix_3"
+      "distributions"=[
+        ["name"="celix_demo_shared"]
+        ["name"="celix_demo_producer"]
+      ]
+    ]
+    [
+      "name"="celix_4"
+      "distributions"=[
+        ["name"="celix_demo_shared"]
+        ["name"="celix_demo_processor"]
       ]
     ]
     [
       "name"="felix_1"
       "distributions"=[
         ["name"="felix_demo_shared"]
-	["name"="felix_demo_producer"]
-	["name"="felix_demo_viewer"]
+        ["name"="felix_demo_producer"]
+        ["name"="felix_demo_viewer"]
       ]
     ]
     [
       "name"="felix_2"
       "distributions"=[
         ["name"="felix_demo_shared"]
-	["name"="felix_demo_queue"]
+        ["name"="felix_demo_queue"]
+      ]
+    ]
+    [
+      "name"="felix_3"
+      "distributions"=[
+        ["name"="felix_demo_shared"]
+        ["name"="felix_demo_processor"]
+      ]
+    ]
+    [
+      "name"="felix_4"
+      "distributions"=[
+        ["name"="felix_demo_shared"]
+        ["name"="felix_demo_producer"]
       ]
     ]
   ]
