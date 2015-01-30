@@ -284,12 +284,12 @@ create_feature_mapping [
     [
       "name"="felix_demo_api"
       "artifacts"=[
-        ["identity"="org.inaetics.demonstrator.api.data" "version"="1.0.0.201412020959"]
-        ["identity"="org.inaetics.demonstrator.api.datastore" "version"="1.0.0.201412020959"]
-        ["identity"="org.inaetics.demonstrator.api.processor" "version"="1.0.0.201412020959"]
-        ["identity"="org.inaetics.demonstrator.api.producer" "version"="1.0.0.201412020959"]
-        ["identity"="org.inaetics.demonstrator.api.queue" "version"="1.0.0.201412020959"]
-        ["identity"="org.inaetics.demonstrator.api.stats" "version"="1.0.0.201412020959"]
+        ["identity"="org.inaetics.demonstrator.api.data" "version"="1.0.0"]
+        ["identity"="org.inaetics.demonstrator.api.datastore" "version"="1.0.0"]
+        ["identity"="org.inaetics.demonstrator.api.processor" "version"="1.0.0"]
+        ["identity"="org.inaetics.demonstrator.api.producer" "version"="1.0.0"]
+        ["identity"="org.inaetics.demonstrator.api.queue" "version"="1.0.0"]
+        ["identity"="org.inaetics.demonstrator.api.stats" "version"="1.0.0"]
       ]
     ]
     [
@@ -325,7 +325,7 @@ create_feature_mapping [
     [
       "name"="felix_agent_base"
       "artifacts"=[
-        ["identity"="org.apache.felix.configadmin" "version"="1.6.1.R1515316"]
+        ["identity"="org.apache.felix.configadmin" "version"="1.8.0"]
         ["identity"="org.apache.felix.dependencymanager" "version"="3.2.0"]
         ["identity"="org.apache.felix.eventadmin" "version"="1.3.2"]
         ["identity"="org.apache.felix.log" "version"="1.0.1"]
@@ -338,7 +338,7 @@ create_feature_mapping [
         ["identity"="org.apache.felix.gogo.command" "version"="0.12.0"]
         ["identity"="org.apache.felix.gogo.runtime" "version"="0.12.0"]
         ["identity"="org.apache.felix.gogo.shell" "version"="0.10.0"]
-        ["identity"="org.apache.felix.dependencymanager.shell" "version"="3.0.1.SNAPSHOT"]
+        ["identity"="org.apache.felix.dependencymanager.shell" "version"="3.2.0"]
       ]
     ]
     [
