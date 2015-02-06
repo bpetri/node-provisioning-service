@@ -301,7 +301,7 @@ create_feature_mapping [
     [
       "name"="felix_demo_producer"
       "artifacts"=[
-        ["identity"="org.inaetics.demonstrator.java_impl.producer" "version"="0"]
+        ["identity"="org.inaetics.demonstrator.java_impl.producer.burst" "version"="0"]
       ]
     ]
     [
