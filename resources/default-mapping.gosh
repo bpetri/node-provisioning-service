@@ -559,4 +559,4 @@ if { math:gt $failureSize 0 }{\
   echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
 }
 ace:rw $workspace
-telnetd start
+telnetd --ip=0.0.0.0 start
