@@ -483,7 +483,7 @@ create_target_mapping [
       "name"="celix_1"
       "distributions"=[
         ["name"="celix_demo_shared"]
-        ["name"="celix_demo_datastore"]
+        ["name"="celix_demo_producer"]
       ]
     ]
     [
@@ -511,6 +511,7 @@ create_target_mapping [
       "name"="felix_1"
       "distributions"=[
         ["name"="felix_demo_shared"]
+        ["name"="felix_demo_datastore"]
         ["name"="felix_demo_viewer"]
       ]
     ]
@@ -519,7 +520,6 @@ create_target_mapping [
       "distributions"=[
         ["name"="felix_demo_shared"]
         ["name"="felix_demo_queue"]
-        ["name"="felix_demo_producer"]
       ]
     ]
     [
