@@ -497,14 +497,14 @@ create_target_mapping [
       "name"="celix_3"
       "distributions"=[
         ["name"="celix_demo_shared"]
-        ["name"="celix_demo_producer"]
+        ["name"="celix_demo_processor"]
       ]
     ]
     [
       "name"="celix_4"
       "distributions"=[
         ["name"="celix_demo_shared"]
-        ["name"="celix_demo_processor"]
+        ["name"="celix_demo_producer"]
       ]
     ]
     [
@@ -526,14 +526,14 @@ create_target_mapping [
       "name"="felix_3"
       "distributions"=[
         ["name"="felix_demo_shared"]
-        ["name"="felix_demo_producer"]
+        ["name"="felix_demo_processor"]
       ]
     ]
     [
       "name"="felix_4"
       "distributions"=[
         ["name"="felix_demo_shared"]
-        ["name"="felix_demo_processor"]
+        ["name"="felix_demo_producer"]
       ]
     ]
   ]
