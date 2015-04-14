@@ -358,12 +358,28 @@ create_feature_mapping [
       ]
     ]
     [
-      "name"="felix_agent_rsa"
+      "name"="felix_agent_rsa_base"
       "artifacts"=[
         ["identity"="org.osgi.service.remoteserviceadmin" "version"="6.0.0.201403170857"]
-        ["identity"="org.amdatu.remote.admin.http" "version"="0.1.1"]
         ["identity"="org.amdatu.remote.discovery.etcd" "version"="0.1.1"]
         ["identity"="org.amdatu.remote.topology.promiscuous" "version"="0.1.2"]
+      ]
+    ]
+    [
+      "name"="felix_agent_rsa_http"
+      "artifacts"=[
+        ["identity"="org.amdatu.remote.admin.http" "version"="0.1.1"]
+      ]
+    ]
+    [
+      "name"="felix_agent_rsa_wiring"
+      "artifacts"=[
+        ["identity"="org.inaetics.remote.admin.wiring" "version"="0.1.0"]
+        ["identity"="org.inaetics.wiring.endpoint" "version"="0.1.0"]
+        ["identity"="org.inaetics.wiring.base" "version"="0.1.0"]
+        ["identity"="org.inaetics.wiring.topology.promiscuous" "version"="0.1.0"]
+        ["identity"="org.inaetics.wiring.discovery.etcd" "version"="0.1.0"]
+        ["identity"="org.inaetics.wiring.admin.http" "version"="0.1.0"]
       ]
     ]
   ]
@@ -427,7 +443,8 @@ create_distribution_mapping [
         ["name"="felix_agent_shell"]
         ["name"="felix_agent_web" ]
         ["name"="felix_agent_webconsole" ]
-        ["name"="felix_agent_rsa" ]
+        ["name"="felix_agent_rsa_base" ]
+        ["name"="felix_agent_rsa_wiring" ]
         ["name"="felix_demo_api" ]
       ]
       "attributes"=[]
