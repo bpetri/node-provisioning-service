@@ -368,7 +368,7 @@ create_feature_mapping [
     [
       "name"="felix_agent_rsa_http"
       "artifacts"=[
-        ["identity"="org.amdatu.remote.admin.http" "version"="0.1.1"]
+        ["identity"="org.amdatu.remote.admin.http" "version"="0.1.2"]
       ]
     ]
     [
