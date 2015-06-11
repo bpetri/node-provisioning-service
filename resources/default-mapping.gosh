@@ -323,6 +323,12 @@ create_feature_mapping [
       ]
     ]
     [
+      "name"="felix_demo_coordinator"
+      "artifacts"=[
+        ["identity"="org.inaetics.demonstrator.java_impl.coordinator" "version"="0"]
+      ]
+    ]
+    [
       "name"="felix_agent_base"
       "artifacts"=[
         ["identity"="org.apache.felix.configadmin" "version"="1.8.0"]
@@ -490,6 +496,14 @@ create_distribution_mapping [
       "attributes"=[]
       "tags"=[]
     ]
+    [
+      "name"="felix_demo_coordinator"
+      "features"=[
+        ["name"="felix_demo_coordinator"]
+      ]
+      "attributes"=[]
+      "tags"=[]
+    ]
   ]
 ]
 
@@ -530,6 +544,7 @@ create_target_mapping [
         ["name"="felix_demo_shared"]
         ["name"="felix_demo_datastore"]
         ["name"="felix_demo_viewer"]
+        ["name"="felix_demo_coordinator"]
       ]
     ]
     [
