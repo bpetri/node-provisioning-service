@@ -13,6 +13,7 @@ DEBUG_LOG=true
 #
 source etcdctl.sh
 
+MAX_PROVISIONING_RESTART=10
 MAX_RETRY_ETCD_REPO=10
 RETRY_ETCD_REPO_INTERVAL=5
 ETCD_TTL_INTERVALL=60
@@ -136,12 +137,22 @@ if [ $GOSH_NONINTERACTIVE ]; then
   JAVA_PROPS="$JAVA_PROPS -Dgosh.args=--nointeractive"
 fi
 
-start_provisioning
 
-while true; do
-  #TODO monitor JVM?
-  _log "store to etcd and wait..."
-  store_etcd_data
-  sleep $ETCD_REWRITE_INTERVALL &
-  wait $!
+PROVISIONING_RESTART=0
+
+while [ $PROVISIONING_RESTART -le $MAX_PROVISIONING_RESTART ]; do
+
+  if [ "$provisioning_pid" == "" ]; then
+        _log "Starting Provisioning."
+        ((PROVISIONING_RESTART+=1))
+        start_provisioning
+  elif [ ! -d "/proc/$provisioning_pid" ]; then
+        _log "Provisioning not found. Restarting."
+        stop_provisioning
+  else
+        _log "store to etcd and wait..."
+        store_etcd_data
+        sleep $ETCD_REWRITE_INTERVALL &
+        wait $!
+  fi
 done
