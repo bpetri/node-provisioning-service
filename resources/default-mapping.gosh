@@ -343,6 +343,18 @@ create_feature_mapping [
       ]
     ]
     [
+      "name"="felix_demo_k8sclient"
+      "artifacts"=[
+        ["identity"="org.inaetics.demonstrator.java_impl.k8sclient" "version"="0"]
+        ["identity"="com.fasterxml.jackson.core.jackson-core" "version"="2.3.2"]
+        ["identity"="com.fasterxml.jackson.core.jackson-databind" "version"="2.3.1"]
+        ["identity"="com.fasterxml.jackson.core.jackson-annotations" "version"="2.3.0"]
+        ["identity"="org.apache.httpcomponents.httpcore" "version"="4.2.3"]
+        ["identity"="org.apache.httpcomponents.httpclient" "version"="4.2.3"]
+        ["identity"="com.springsource.org.apache.commons.logging" "version"="1.1.1"]
+      ]
+    ]
+    [
       "name"="felix_demo_utilization"
       "artifacts"=[
         ["identity"="org.inaetics.demonstrator.java_impl.utilization" "version"="0"]
@@ -372,11 +384,6 @@ create_feature_mapping [
         ["identity"="org.apache.felix.http.whiteboard" "version"="2.3.2"]
         ["identity"="org.amdatu.web.resourcehandler" "version"="1.0.5"]
         ["identity"="com.fasterxml.jackson.core.jackson-core" "version"="2.3.2"]
-        ["identity"="com.fasterxml.jackson.core.jackson-databind" "version"="2.3.1"]
-        ["identity"="com.fasterxml.jackson.core.jackson-annotations" "version"="2.3.0"]
-        ["identity"="org.apache.httpcomponents.httpcore" "version"="4.2.3"]
-        ["identity"="org.apache.httpcomponents.httpclient" "version"="4.2.3"]
-        ["identity"="com.springsource.org.apache.commons.logging" "version"="1.1.1"]
       ]
     ]
     [
@@ -526,6 +533,7 @@ create_distribution_mapping [
       "name"="felix_demo_coordinator"
       "features"=[
         ["name"="felix_demo_coordinator"]
+        ["name"="felix_demo_k8sclient"]
       ]
       "attributes"=[]
       "tags"=[]
