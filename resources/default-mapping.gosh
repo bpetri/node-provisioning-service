@@ -234,11 +234,25 @@ create_feature_mapping [
     [
       "name"="celix_common"
       "artifacts"=[
-        ["identity"="apache_celix_remote_service_admin_http" "version"="0.0.1"]
         ["identity"="apache_celix_rs_topology_manager" "version"="0.0.1"]
         ["identity"="apache_celix_rsa_discovery_etcd" "version"="0.0.1"]
-        ["identity"="apache_celix_shell" "version"="1.0.0.incubating"]
+        ["identity"="apache_celix_shell" "version"="1.0.0"]
         ["identity"="apache_celix_remote_shell" "version"="0.0.1"]
+      ]
+    ]
+    [
+      "name"="celix_rsa_http"
+      "artifacts"=[
+        ["identity"="apache_celix_remote_service_admin_http" "version"="0.0.1"]
+      ]
+    ]
+    [
+      "name"="celix_rsa_wiring"
+      "artifacts"=[
+        ["identity"="apache_celix_wiring_admin" "version"="0.0.1"]
+        ["identity"="apache_celix_wiring_node_discovery_etcd" "version"="0.0.1"]
+        ["identity"="apache_celix_wiring_remote_service_admin" "version"="0.0.1"]
+        ["identity"="apache_celix_wiring_topology_manager" "version"="0.0.1"]
       ]
     ]
     [
@@ -270,8 +284,8 @@ create_feature_mapping [
       "artifacts"=[
         ["identity"="org.inaetics.demonstrator.processor" "version"="1.0.0"]
         ["identity"="org.inaetics.demonstrator.queue_proxy" "version"="1.0.0"]
-        ["identity"="org.inaetics.demonstrator.data_store_proxy" "version"="1.0.0"]
         ["identity"="org.inaetics.demonstrator.stats_provider_endpoint" "version"="1.0.0"]
+        ["identity"="org.inaetics.demonstrator.data_store_proxy" "version"="1.0.0"]
       ]
     ]
     [
@@ -323,6 +337,30 @@ create_feature_mapping [
       ]
     ]
     [
+      "name"="felix_demo_coordinator"
+      "artifacts"=[
+        ["identity"="org.inaetics.demonstrator.java_impl.coordinator" "version"="0"]
+      ]
+    ]
+    [
+      "name"="felix_demo_k8sclient"
+      "artifacts"=[
+        ["identity"="org.inaetics.demonstrator.java_impl.k8sclient" "version"="0"]
+        ["identity"="com.fasterxml.jackson.core.jackson-core" "version"="2.3.2"]
+        ["identity"="com.fasterxml.jackson.core.jackson-databind" "version"="2.3.1"]
+        ["identity"="com.fasterxml.jackson.core.jackson-annotations" "version"="2.3.0"]
+        ["identity"="org.apache.httpcomponents.httpcore" "version"="4.2.3"]
+        ["identity"="org.apache.httpcomponents.httpclient" "version"="4.2.3"]
+        ["identity"="com.springsource.org.apache.commons.logging" "version"="1.1.1"]
+      ]
+    ]
+    [
+      "name"="felix_demo_utilization"
+      "artifacts"=[
+        ["identity"="org.inaetics.demonstrator.java_impl.utilization" "version"="0"]
+      ]
+    ]
+    [
       "name"="felix_agent_base"
       "artifacts"=[
         ["identity"="org.apache.felix.configadmin" "version"="1.8.0"]
@@ -358,12 +396,28 @@ create_feature_mapping [
       ]
     ]
     [
-      "name"="felix_agent_rsa"
+      "name"="felix_agent_rsa_base"
       "artifacts"=[
         ["identity"="org.osgi.service.remoteserviceadmin" "version"="6.0.0.201403170857"]
-        ["identity"="org.amdatu.remote.admin.http" "version"="0.1.1"]
         ["identity"="org.amdatu.remote.discovery.etcd" "version"="0.1.1"]
         ["identity"="org.amdatu.remote.topology.promiscuous" "version"="0.1.2"]
+      ]
+    ]
+    [
+      "name"="felix_agent_rsa_http"
+      "artifacts"=[
+        ["identity"="org.amdatu.remote.admin.http" "version"="0.1.1"]
+      ]
+    ]
+    [
+      "name"="felix_agent_rsa_wiring"
+      "artifacts"=[
+        ["identity"="org.inaetics.remote.admin.wiring" "version"="0.1.0"]
+        ["identity"="org.inaetics.wiring.endpoint" "version"="0.1.0"]
+        ["identity"="org.inaetics.wiring.base" "version"="0.1.0"]
+        ["identity"="org.inaetics.wiring.topology.promiscuous" "version"="0.1.0"]
+        ["identity"="org.inaetics.wiring.discovery.etcd" "version"="0.1.0"]
+        ["identity"="org.inaetics.wiring.admin.http" "version"="0.1.0"]
       ]
     ]
   ]
@@ -376,6 +430,7 @@ create_distribution_mapping [
       "name"="celix_demo_shared"
       "features"=[
         ["name"="celix_common"]
+        ["name"="celix_rsa_wiring"]
       ]
       "attributes"=[]
       "tags"=[]
@@ -427,7 +482,8 @@ create_distribution_mapping [
         ["name"="felix_agent_shell"]
         ["name"="felix_agent_web" ]
         ["name"="felix_agent_webconsole" ]
-        ["name"="felix_agent_rsa" ]
+        ["name"="felix_agent_rsa_base" ]
+        ["name"="felix_agent_rsa_wiring" ]
         ["name"="felix_demo_api" ]
       ]
       "attributes"=[]
@@ -473,6 +529,23 @@ create_distribution_mapping [
       "attributes"=[]
       "tags"=[]
     ]
+    [
+      "name"="felix_demo_coordinator"
+      "features"=[
+        ["name"="felix_demo_coordinator"]
+        ["name"="felix_demo_k8sclient"]
+      ]
+      "attributes"=[]
+      "tags"=[]
+    ]
+    [
+      "name"="felix_demo_utilization"
+      "features"=[
+        ["name"="felix_demo_utilization"]
+      ]
+      "attributes"=[]
+      "tags"=[]
+    ]
   ]
 ]
 
@@ -513,6 +586,8 @@ create_target_mapping [
         ["name"="felix_demo_shared"]
         ["name"="felix_demo_datastore"]
         ["name"="felix_demo_viewer"]
+        ["name"="felix_demo_coordinator"]
+        ["name"="felix_demo_utilization"]
       ]
     ]
     [
