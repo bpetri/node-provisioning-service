@@ -215,7 +215,7 @@ _create_artifact = {
 
 failures=[]
 
-source_index = (repo:index "default-resources")
+source_index = (repo:index "/bundles/default-resources")
 source_repo = (repo:repo "R5" "$source_index")
 target_repo = (repo:repo "OBR" "http://localhost:8080/obr/repository.xml")
 
