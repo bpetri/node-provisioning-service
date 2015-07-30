@@ -304,6 +304,7 @@ create_feature_mapping [
         ["identity"="org.inaetics.demonstrator.api.producer" "version"="1.0.0"]
         ["identity"="org.inaetics.demonstrator.api.queue" "version"="1.0.0"]
         ["identity"="org.inaetics.demonstrator.api.stats" "version"="1.0.0"]
+        ["identity"="org.inaetics.demonstrator.api.coordinator" "version"="1.0.0"]
       ]
     ]
     [
@@ -315,7 +316,7 @@ create_feature_mapping [
     [
       "name"="felix_demo_producer"
       "artifacts"=[
-        ["identity"="org.inaetics.demonstrator.java_impl.producer.burst" "version"="0"]
+        ["identity"="org.inaetics.demonstrator.java_impl.producer.periodic" "version"="0"]
       ]
     ]
     [
@@ -339,17 +340,12 @@ create_feature_mapping [
     [
       "name"="felix_demo_coordinator"
       "artifacts"=[
-        ["identity"="org.inaetics.demonstrator.java_impl.coordinator" "version"="0"]
-        ["identity"="org.amdatu.kubernetes" "version"="1.0.0.201507081913"]
+        ["identity"="org.inaetics.demonstrator.java_impl.coordinator.autoscaler" "version"="0"]
+        ["identity"="org.inaetics.demonstrator.java_impl.coordinator.k8s" "version"="0"]
+        ["identity"="org.amdatu.kubernetes" "version"="1.0.2"]
         ["identity"="io.reactivex.rxjava" "version"="1.0.12"]
         ["identity"="com.fasterxml.jackson.core.jackson-annotations" "version"="2.3.0"]
         ["identity"="com.fasterxml.jackson.core.jackson-databind" "version"="2.3.1"]
-        ["identity"="org.apache.commons.lang" "version"="2.6.0"]
-        ["identity"="org.apache.httpcomponents.httpclient" "version"="4.2.3"]
-        ["identity"="org.apache.httpcomponents.httpcore" "version"="4.2.3"]
-        ["identity"="com.springsource.org.apache.commons.logging" "version"="1.1.1"]
-        ["identity"="slf4j.api" "version"="1.7.7"]
-        ["identity"="slf4j.simple" "version"="1.7.7"]
       ]
     ]
     [
@@ -408,7 +404,7 @@ create_feature_mapping [
     [
       "name"="felix_agent_rsa_http"
       "artifacts"=[
-        ["identity"="org.amdatu.remote.admin.http" "version"="0.1.1"]
+        ["identity"="org.amdatu.remote.admin.http" "version"="0.1.2"]
       ]
     ]
     [
