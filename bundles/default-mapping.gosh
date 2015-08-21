@@ -267,6 +267,7 @@ create_feature_mapping [
       "name"="celix_demo_producer"
       "artifacts"=[
         ["identity"="org.inaetics.demonstrator.producer" "version"="1.0.0"]
+        ["identity"="org.inaetics.demonstrator.producer_endpoint" "version"="1.0.0"]
         ["identity"="org.inaetics.demonstrator.queue_proxy" "version"="1.0.0"]
         ["identity"="org.inaetics.demonstrator.stats_provider_endpoint" "version"="1.0.0"]
       ]
