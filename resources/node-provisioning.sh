@@ -98,6 +98,7 @@ stop_provisioning () {
 
 clean_up () {
   stop_provisioning
+  rm /tmp/health
   exit
 }
 
@@ -137,22 +138,26 @@ if [ $GOSH_NONINTERACTIVE ]; then
   JAVA_PROPS="$JAVA_PROPS -Dgosh.args=--nointeractive"
 fi
 
+# we are healthy, used by kubernetes
+echo ok > /tmp/health
 
 PROVISIONING_RESTART=0
 
 while [ $PROVISIONING_RESTART -le $MAX_PROVISIONING_RESTART ]; do
 
   if [ "$provisioning_pid" == "" ]; then
-        _log "Starting Provisioning."
-        ((PROVISIONING_RESTART+=1))
-        start_provisioning
+    _log "Starting Provisioning."
+    ((PROVISIONING_RESTART+=1))
+    start_provisioning
   elif [ ! -d "/proc/$provisioning_pid" ]; then
-        _log "Provisioning not found. Restarting."
-        stop_provisioning
+    # clean up and exit loop
+    echo "provisioning process not running anymore, cleaning up..."
+    clean_up
+    break
   else
-        _log "store to etcd and wait..."
-        store_etcd_data
-        sleep $ETCD_REWRITE_INTERVALL &
-        wait $!
+    _log "store to etcd and wait..."
+    store_etcd_data
+    sleep $ETCD_REWRITE_INTERVALL &
+    wait $!
   fi
 done
