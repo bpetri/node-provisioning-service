@@ -367,6 +367,7 @@ create_feature_mapping [
         ["identity"="org.amdatu.configurator.api" "version"="1.0.0"]
         ["identity"="org.amdatu.configurator.properties" "version"="1.0.0"]
         ["identity"="org.amdatu.configurator.shell" "version"="1.0.0"]
+        ["identity"="org.inaetics.demonstrator.java_impl.logsender" "version"="0"]
       ]
     ]
     [
