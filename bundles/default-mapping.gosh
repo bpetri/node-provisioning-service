@@ -562,7 +562,7 @@ create_target_mapping [
       "name"="celix_2"
       "distributions"=[
         ["name"="celix_demo_shared"]
-        ["name"="celix_demo_processor"]
+        ["name"="celix_demo_queue"]
       ]
     ]
     [
