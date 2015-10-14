@@ -1,0 +1,3 @@
+[submodule "bundles/deployment_test"]
+	path = bundles/deployment_test
+	url = https://github.com/bpetri/deployment_test.git
