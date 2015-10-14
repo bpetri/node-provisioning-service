@@ -1,4 +1,4 @@
-Node Provisioning Service
+Node Provisioning Service [![Build Status](https://travis-ci.org/INAETICS/node-provisioning-service.svg?branch=master)](https://travis-ci.org/INAETICS/node-provisioning-service)
 =========================
 
 Run [Apache ACE Server] (https://ace.apache.org/) inside a Docker container.
